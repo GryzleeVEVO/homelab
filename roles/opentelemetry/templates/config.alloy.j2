@@ -1,0 +1,105 @@
+logging {
+  level = "warn"
+}
+
+// --- Loki ---
+
+// Loki endpoint. This should be the last stage before logs are sent
+loki.write "default" {
+  endpoint {
+    url = "{{ alloy_loki_endpoint }}"
+  }
+}
+
+// Add common labels before sending to Loki. All log senders should forward
+// to this stage once done
+loki.process "static_labels" {
+  stage.static_labels {
+    values = {
+      // Identify host in exported logs
+      instance = constants.hostname,
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+
+{% if alloy_monitor_services.docker is defined %}
+// --- Docker ---
+
+// Get logs
+loki.source.docker "docker_logs" {
+  host = "unix:///var/run/docker.sock"
+  targets = discovery.relabel.docker_labels.output
+  forward_to = [loki.process.static_labels.receiver]
+}
+
+// Get container metadata
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+  refresh_interval = "30s"
+}
+
+// Create labels for Docker services
+discovery.relabel "docker_labels" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "service_name"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex         = "(.+)"
+    target_label  = "service_name"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    target_label  = "compose_project"
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "docker"
+  }
+}
+{% endif %}
+
+{% if alloy_monitor_services.journal is defined %}
+// --- Journal ---
+loki.source.journal "journal_logs" {
+  relabel_rules = loki.relabel.journal_relabel.rules
+  forward_to = [loki.process.journal_static_labels.receiver]
+}
+
+loki.relabel "journal_relabel" {
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "service_name"
+    regex         = "(.+?)(?:\\.service)?$"
+    replacement   = "$1"
+  }
+
+  forward_to = []
+}
+
+loki.process "journal_static_labels" {
+  stage.static_labels {
+    values = {
+      job = "journal",
+    }
+  }
+
+  forward_to = [loki.process.static_labels.receiver]
+}
+{% endif %}

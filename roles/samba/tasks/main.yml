@@ -1,0 +1,13 @@
+- name: Install Samba and NTFS driver
+  ansible.builtin.apt:
+    name:
+      - samba
+      - ntfs-3g
+  notify:
+    - Enable and start smbd
+    - Disable and stop nmbd
+
+- name: Tell firewalld to open port
+  ansible.builtin.include_role:
+    name: firewalld
+    tasks_from: node_exporter

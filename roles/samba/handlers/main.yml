@@ -1,0 +1,11 @@
+- name: Enable and start smbd
+  ansible.builtin.service:
+    name: smbd
+    state: started
+    enabled: true
+
+- name: Disable and stop nmbd
+  ansible.builtin.service:
+    name: nmbd
+    state: started
+    enabled: true

@@ -1,0 +1,63 @@
+---
+- name: Set up user environment
+  hosts: all
+  tasks:
+    - name: Install prerequisites
+      become: true
+      ansible.builtin.apt:
+        package:
+          - git
+          - neovim
+          - stow
+          - tealdeer
+          - unzip
+        state: present
+
+    - name: Create directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - $HOME/.cache
+        - $HOME/.config
+        - $HOME/.config/autostart
+        - $HOME/.config/systemd/user
+        - $HOME/.local
+        - $HOME/.local/bin
+        - $HOME/.local/share
+        - $HOME/.local/state
+        - $HOME/.ssh
+        - $HOME/src
+
+    - name: Clone GryzleeVEVO/dotfiles
+      ansible.builtin.git:
+        repo: https://github.com/GryzleeVEVO/dotfiles
+        dest: $HOME/.dotfiles
+        version: main
+
+    - name: Remove conflicting files before stowing
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - $HOME/.bashrc
+        - $HOME/.bash_history
+        - $HOME/.bash_logout
+        - $HOME/.profile
+
+    - name: Install dotfiles with stow
+      ansible.builtin.command:
+        cmd: stow --dir=$HOME/.dotfiles --target=$HOME --verbose {{ item }}
+      register: stow_output
+      changed_when: stow_output.rc == 0
+      failed_when: stow_output.rc != 0
+      loop:
+        - core
+        - bash
+
+    - name: Generate SSH keys
+      community.crypto.openssh_keypair:
+        path: "$HOME/.ssh/id_ed25519"
+        type: ed25519
+        regenerate: "{{ 'always' if (regenerate_keys | default(false) | bool) else 'partial_idempotence' }}"

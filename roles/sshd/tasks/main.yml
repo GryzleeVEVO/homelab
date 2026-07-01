@@ -1,0 +1,39 @@
+---
+- name: Add basic sshd setup files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/ssh/sshd_config.d/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ sshd_setup_files }}"
+
+- name: Warn if not using public key authentication
+  ansible.builtin.debug:
+    msg: "Password authentication used with this host. Will add password auth anyways to avoid lockout..."
+  when: ansible_ssh_pass is defined
+
+- name: Add password authentication to local networks
+  when: not sshd_no_password | bool or ansible_ssh_pass is defined
+  ansible.builtin.copy:
+    src: 91-password-auth.conf
+    dest: /etc/ssh/sshd_config.d/91-password-auth.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Remove password authentication if requested
+  when:
+    - sshd_no_password | bool
+    - ansible_ssh_pass is not defined
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d/91-password-auth.conf
+    state: absent
+
+- name: Validate sshd config before restart
+  ansible.builtin.command: sshd -t
+  register: sshd_check
+  changed_when: sshd_check.rc == 0
+  failed_when: sshd_check.rc != 0
+  notify:
+    - Enable and restart sshd

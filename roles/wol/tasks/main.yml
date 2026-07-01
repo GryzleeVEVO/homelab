@@ -1,0 +1,51 @@
+---
+- name: Check prerequisites
+  assert:
+    that: wol_remote_user is defined
+
+- name: Install prerequisites
+  ansible.builtin.apt:
+    package:
+      - linux-headers-amd64
+      - dkms
+      - ethtool
+      - git
+      - wget
+    state: present
+
+- name: Clone AndiWeiss/alx-wol
+  ansible.builtin.git:
+    repo: https://github.com/AndiWeiss/alx-wol
+    dest: /opt/alx-wol
+    version: master
+
+# - name: Remove alx-wol DKMS module if present
+#   ansible.builtin.command:
+#     cmd: ./remove.sh
+#     chdir: /opt/alx-wol
+#     stdin: "y\n"
+#   register: wol_remove
+#   changed_when: "'deinstallation of alx-wol completed' in wol_remove.stdout"
+#   failed_when: wol_remove.rc != 0
+#
+# - name: Install alx-wol DKMS module
+#   ansible.builtin.command:
+#     cmd: ./install.sh
+#     chdir: /opt/alx-wol
+#     stdin: "y\n"
+#   register: wol_install
+#   changed_when: wol_install.stdout is search('### installation of alx-wol version .* succeeded')
+#   failed_when: "'FAILED installation of alx-wol' in wol_install.stdout or wol_install.rc != 0"
+
+- name: Allow user to shut down and suspend
+  template:
+    src: remote-shutdown.j2
+    dest: /etc/sudoers.d/remote-shutdown
+    mode: "0440"
+  register: sudoers_file_install_out
+
+- name: Check for correct sudo file
+  command: visudo -c
+  register: visudo_check_out
+  changed_when: sudoers_file_install_out.changed and visudo_check_out.rc == 0
+  failed_when: visudo_check_out.rc != 0

@@ -1,0 +1,6 @@
+---
+- name: Enable and start plocate-updatedb.timer
+  ansible.builtin.service:
+    name: plocate-updatedb.timer
+    state: started
+    enabled: true

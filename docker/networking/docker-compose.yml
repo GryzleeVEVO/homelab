@@ -1,0 +1,26 @@
+---
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    hostname: pihole
+    restart: unless-stopped
+    ports:
+      - 9000:80
+      - 53:53/tcp
+      - 53:53/udp
+    environment:
+      # Needed for bridges
+      FTLCONF_dns_listeningMode: 'ALL'
+    volumes:
+      - config:/etc/pihole
+    cap_add:
+      # # DHCP support
+      # - NET_ADMIN
+      # # NTP support
+      # - SYS_TIME
+      # Give scheduler priority
+      - SYS_NICE
+
+volumes:
+  config:

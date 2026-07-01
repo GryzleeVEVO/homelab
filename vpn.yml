@@ -1,0 +1,27 @@
+---
+- name: Set up a Wireguard interface for the server
+  hosts: all
+  become: true
+  tasks:
+    - name: Include role
+      ansible.builtin.import_role:
+        name: wireguard
+        tasks_from: new_server.yml
+      tags: new_server
+
+    - name: Set up clients
+      ansible.builtin.include_role:
+        name: wireguard
+        tasks_from: add_client.yml
+        apply:
+          tags: new_client
+      loop: "{{ wireguard_clients | default([]) }}"
+      loop_control:
+        loop_var: client
+      tags: add_clients
+
+    - name: Remove clients
+      ansible.builtin.import_role:
+        name: wireguard
+        tasks_from: remove_clients.yml
+      tags: remove_clients

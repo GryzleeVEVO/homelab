@@ -1,0 +1,7 @@
+[Interface]
+Address = {{ wireguard_server_ip }}
+ListenPort = {{ wireguard_server_port }}
+PrivateKey = {{ wireguard_server_private_key }}
+{% if wireguard_dns_servers is defined and wireguard_dns_servers | length > 0 %}
+DNS = {{ wireguard_dns_servers | join(', ') }}
+{% endif %}

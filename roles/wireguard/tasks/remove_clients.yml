@@ -1,0 +1,38 @@
+---
+- name: Get current clients
+  ansible.builtin.find:
+    paths: /etc/wireguard/clients
+    file_type: directory
+    depth: 1
+  register: found_clients
+
+- name: Build clients list
+  ansible.builtin.set_fact:
+    clients_to_remove: >-
+      {{
+        found_clients.files
+        | map(attribute='path')
+        | map('basename')
+        | reject('equalto', 'clients')
+        | reject('in',
+            wireguard_clients
+            | map(attribute='name')
+            | list
+          )
+        | list
+      }}
+
+- name: Remove peer from server file
+  ansible.builtin.blockinfile:
+    path: /etc/wireguard/wg0.conf
+    marker: "# {{ item }} {mark}"
+    state: absent
+  loop: "{{ clients_to_remove }}"
+  notify: Enable and restart Wireguard interface
+
+- name: Remove client directory
+  ansible.builtin.file:
+    path: /etc/wireguard/clients/{{ item }}
+    state: absent
+  loop: "{{ clients_to_remove }}"
+  notify: Enable and restart Wireguard interface

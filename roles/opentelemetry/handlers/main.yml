@@ -1,0 +1,12 @@
+---
+- name: Enable and start node_exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true
+
+- name: Disable and stop openipmi
+  ansible.builtin.service:
+    name: openipmi
+    state: stopped
+    enabled: false

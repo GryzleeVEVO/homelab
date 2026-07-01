@@ -1,0 +1,12 @@
+[Interface]
+Address = {{ client.ip }}
+PrivateKey = {{ wireguard_client_private_key }}
+{% if wireguard_dns_servers is defined and wireguard_dns_servers | length > 0 %}
+DNS = {{ wireguard_dns_servers | join(', ') }}
+{% endif %}
+
+[Peer]
+PublicKey = {{ wireguard_server_public_key }}
+Endpoint = {{ client.endpoint }}
+AllowedIPs = {{ client.allowed_ips }}
+PersistentKeepalive = 25

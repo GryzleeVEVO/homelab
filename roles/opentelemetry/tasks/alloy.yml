@@ -1,0 +1,8 @@
+---
+- name: Render alloy config into variable
+  ansible.builtin.set_fact:
+    alloy_config: "{{ lookup('template', './templates/config.alloy.j2') }}"
+
+- name: Install Alloy using official role
+  ansible.builtin.import_role:
+    name: grafana.grafana.alloy

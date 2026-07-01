@@ -1,0 +1,93 @@
+---
+- name: Run post-install tasks on host
+  hosts: all
+  become: true
+  tasks:
+    - name: Update repositories and upgrade system
+      ansible.builtin.apt:
+        upgrade: true
+        update_cache: true
+
+    - name: Install basic packages
+      ansible.builtin.apt:
+        name: "{{ base_packages }}"
+        state: present
+
+    - name: Check if changing the hostname is needed
+      ansible.builtin.set_fact:
+        change_hostname: "{{ hostname is defined and hostname != ansible_facts.hostname }}"
+
+    - name: Change hostname from default
+      when: change_hostname
+      block:
+        - name: Set hostname facts
+          ansible.builtin.set_fact:
+            fqdn: "{{ hostname }}.{{ ansible_facts.fqdn.split('.', 1)[1] }}"
+
+        - name: Show new hostname
+          ansible.builtin.debug:
+            msg:
+              - "Changing hostname from {{ ansible_facts.hostname }} to {{ hostname }}"
+              - "Changing FQDN from {{ ansible_facts.fqdn }} to {{ fqdn }}"
+
+        - name: Change hostname
+          ansible.builtin.hostname:
+            name: "{{ hostname }}"
+
+        - name: Replace old hostname with new hostname in /etc/hosts
+          ansible.builtin.lineinfile:
+            path: /etc/hosts
+            regexp: "^127\\.0\\.1\\.1\\s+"
+            line: "127.0.1.1\t{{ fqdn }}\t{{ hostname }}"
+
+    - name: Install unattended-upgrades
+      ansible.builtin.import_role:
+        name: unattended-upgrades
+      tags: unattended-upgrades
+
+    - name: Set up plocate
+      ansible.builtin.import_role:
+        name: plocate
+      tags: plocate
+
+    - name: Install firewalld
+      ansible.builtin.import_role:
+        name: firewalld
+      tags: firewalld
+
+    - name: Set up sshd
+      ansible.builtin.import_role:
+        name: sshd
+      tags: sshd
+
+    - name: Install WOL drivers for Atheros NICs
+      ansible.builtin.import_role:
+        name: wol
+      tags: wol
+
+    - name: Install Samba
+      ansible.builtin.import_role:
+        name: samba
+      tags: samba
+
+    - name: Install Nginx
+      ansible.builtin.import_role:
+        name: nginx
+      tags: nginx
+
+    - name: Install node_exporter
+      ansible.builtin.import_role:
+        name: opentelemetry
+        tasks_from: node_exporter.yml
+      tags: node_exporter
+
+    - name: Install Alloy
+      ansible.builtin.import_role:
+        name: opentelemetry
+        tasks_from: alloy.yml
+      tags: alloy
+
+    - name: Install Docker
+      ansible.builtin.import_role:
+        name: docker
+      tags: docker

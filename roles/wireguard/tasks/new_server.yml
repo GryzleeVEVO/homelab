@@ -1,0 +1,56 @@
+---
+- name: Install Wireguard tools
+  ansible.builtin.apt:
+    package:
+      - wireguard
+      - resolvconf
+    state: present
+
+- name: Set up firewall
+  ansible.builtin.import_role:
+    name: firewalld
+    tasks_from: wireguard.yml
+
+- name: Generate server keys
+  block:
+    - name: Generate private key
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          umask 0077
+          wg genkey | tee /etc/wireguard/server_private.key
+        creates: /etc/wireguard/server_private.key
+
+    - name: Generate public key
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          umask 0077
+          wg pubkey < /etc/wireguard/server_private.key | tee /etc/wireguard/server_public.key
+        creates: /etc/wireguard/server_public.key
+
+    - name: Read private key
+      ansible.builtin.command:
+        cmd: cat /etc/wireguard/server_private.key
+      register: wireguard_server_private_key_out
+      changed_when: false
+      failed_when: wireguard_server_private_key_out.rc != 0
+
+    - name: Read public key
+      ansible.builtin.command:
+        cmd: cat /etc/wireguard/server_public.key
+      register: wireguard_server_public_key_out
+      changed_when: false
+      failed_when: wireguard_server_private_key_out.rc != 0
+
+    - name: Store keys
+      ansible.builtin.set_fact:
+        wireguard_server_private_key: "{{ wireguard_server_private_key_out.stdout }}"
+        wireguard_server_public_key: "{{ wireguard_server_public_key_out.stdout }}"
+
+- name: Generate basic server config
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: "0600"
+  notify: Enable and restart Wireguard interface

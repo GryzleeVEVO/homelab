@@ -1,0 +1,13 @@
+---
+- name: Install node_exporter
+  ansible.builtin.apt:
+    name: prometheus-node-exporter
+    state: present
+  notify:
+    - Enable and start node_exporter
+    - Disable and stop openipmi
+
+- name: Tell firewalld to open port
+  ansible.builtin.include_role:
+    name: firewalld
+    tasks_from: node_exporter

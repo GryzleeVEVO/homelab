@@ -1,0 +1,17 @@
+- name: Set up and run Docker containers
+  hosts: all
+  become: true
+  tasks:
+    - name: Create /opt/services
+      ansible.builtin.file:
+        path: /opt/services/
+        state: directory
+        mode: "0755"
+
+    - name: Deploy service
+      ansible.builtin.include_role:
+        name: docker
+        tasks_from: deploy.yml
+      loop: "{{ docker_services }}"
+      loop_control:
+        loop_var: service

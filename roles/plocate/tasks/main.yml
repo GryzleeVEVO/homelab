@@ -1,0 +1,6 @@
+---
+- name: Install plocate
+  ansible.builtin.apt:
+    package: plocate
+    state: present
+  notify: Enable and start plocate-updatedb.timer

@@ -1,0 +1,128 @@
+---
+x-healthcheck: &healthcheck
+  start_period: 10s
+  interval: 30s
+  timeout: 30s
+  retries: 3
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.11
+    container_name: jellyfin
+    hostname: jellyfin
+    restart: unless-stopped
+    user: 1000:1000
+    ports:
+      - 8096:8096/tcp   # WEB
+    # - 7359:7359/udp   # DLNA
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - /data/mediaserver/media:/media:ro
+    # Hardware acceleration
+    group_add: [{{ render_group }}]
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+
+  radarr:
+    image: linuxserver/radarr:6.1.1
+    container_name: radarr
+    restart: unless-stopped
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    ports:
+      - 7878:7878
+    volumes:
+      - radarr-config:/config
+      - /data/mediaserver:/data
+    environment:
+      PUID: 1000
+      PGID: 1000
+    healthcheck:
+      test: curl -f http://localhost:7878/ping
+      <<: *healthcheck
+
+  sonarr:
+    image: linuxserver/sonarr:4.0.17
+    container_name: sonarr
+    restart: unless-stopped
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    ports:
+      - 8989:8989
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - sonarr-config:/config
+      - /data/mediaserver:/data
+    healthcheck:
+      test: curl -f http://localhost:8989/ping
+      <<: *healthcheck
+
+  lidarr:
+    image: linuxserver/lidarr:3.1.0
+    container_name: lidarr
+    restart: unless-stopped
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    ports:
+      - 8686:8686
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - lidarr-config:/config
+      - /data/mediaserver:/data
+    healthcheck:
+      test: curl -f http://localhost:8686/ping
+      <<: *healthcheck
+
+  prowlarr:
+    image: linuxserver/prowlarr:2.3.5
+    container_name: prowlarr
+    restart: unless-stopped
+    ports:
+      - 9696:9696
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - prowlarr-config:/config
+    healthcheck:
+      test: curl -f http://localhost:9696/ping
+      <<: *healthcheck
+
+  flaresolverr:
+    image: flaresolverr/flaresolverr:v3.5.0
+    container_name: flaresolverr
+    restart: unless-stopped
+    healthcheck:
+      test: curl -f http://localhost:8191/health
+      <<: *healthcheck
+
+  qbittorrent:
+    image: qbittorrentofficial/qbittorrent-nox:5.2.1-1
+    container_name: qbittorrent
+    restart: unless-stopped
+    ports:
+      - 6880:6880   # Web
+      - 6881:6881   # Bittorrent
+    environment:
+      - QBT_LEGAL_NOTICE=confirm
+      - QBT_WEBUI_PORT=6880
+    volumes:
+      - qbittorrent-config:/config
+      - /data/mediaserver:/data
+
+volumes:
+  jellyfin-config:
+  jellyfin-cache:
+  radarr-config:
+  sonarr-config:
+  lidarr-config:
+  prowlarr-config:
+  qbittorrent-config:

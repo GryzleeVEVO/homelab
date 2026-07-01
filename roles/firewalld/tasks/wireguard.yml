@@ -1,0 +1,43 @@
+- name: Check if firewalld is running
+  ansible.builtin.systemd:
+    name: firewalld
+  register: firewalld_service
+
+- name: Open ports if active
+  when: firewalld_service.status.ActiveState == "active"
+  block:
+    - name: Allow IP forwarding
+      ansible.posix.sysctl:
+        sysctl_file: /etc/sysctl.d/99-ip-forwarding.conf
+        name: net.ipv4.ip_forward
+        value: "1"
+        reload: true
+
+    - name: Allow Wireguard traffic
+      ansible.posix.firewalld:
+        zone: public
+        port: 51820/udp
+        state: enabled
+        permanent: true
+      register: open_wireguard
+
+    - name: Enable masquerading traffic
+      ansible.posix.firewalld:
+        zone: public
+        state: enabled
+        masquerade: true
+        permanent: true
+      register: enable_masquerade
+
+    - name: Add Wireguard interface to trusted zone
+      ansible.posix.firewalld:
+        interface: wg0
+        zone: trusted
+        state: enabled
+        permanent: true
+      register: set_trusted_zone
+
+    - name: Reload config
+      ansible.builtin.command: firewall-cmd --reload
+      when: open_wireguard.changed or enable_masquerade.changed or set_trusted_zone.changed
+      changed_when: true

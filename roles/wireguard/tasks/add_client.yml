@@ -1,0 +1,88 @@
+---
+- name: Fetch server public key
+  block:
+    - name: Read server public key
+      ansible.builtin.command:
+        cmd: cat /etc/wireguard/server_public.key
+      register: wireguard_server_public_key_out
+      changed_when: false
+      failed_when: wireguard_server_public_key_out.rc != 0
+
+    - name: Store server public key
+      ansible.builtin.set_fact:
+        wireguard_server_public_key: "{{ wireguard_server_public_key_out.stdout }}"
+
+- name: Create clients directory
+  ansible.builtin.file:
+    path: /etc/wireguard/clients
+    state: directory
+    mode: "0700"
+
+- name: Create client directory for {{ client.name }}
+  ansible.builtin.file:
+    path: /etc/wireguard/clients/{{ client.name }}
+    state: directory
+    mode: "0700"
+
+- name: Generate client keys
+  block:
+    - name: Generate private key
+      ansible.builtin.shell:
+        cmd: |
+          umask 0077
+          wg genkey > /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
+        creates: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
+
+    - name: Generate public key
+      ansible.builtin.shell:
+        cmd: |
+          umask 0077
+          wg pubkey < /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key \
+            > /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_public.key
+        creates: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_public.key
+
+    - name: Read private key
+      ansible.builtin.command:
+        cmd: cat /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
+      register: wireguard_client_private_key_out
+      changed_when: false
+
+    - name: Read public key
+      ansible.builtin.command:
+        cmd: cat /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_public.key
+      register: wireguard_client_public_key_out
+      changed_when: false
+
+    - name: Store client keys
+      ansible.builtin.set_fact:
+        wireguard_client_private_key: "{{ wireguard_client_private_key_out.stdout }}"
+        wireguard_client_public_key: "{{ wireguard_client_public_key_out.stdout }}"
+
+- name: Generate client config
+  ansible.builtin.template:
+    src: client.conf.j2
+    dest: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}.conf
+    mode: "0600"
+
+- name: Append new peer to server file
+  ansible.builtin.blockinfile:
+    path: /etc/wireguard/wg0.conf
+    marker: "# {{ client.name }} {mark}"
+    prepend_newline: true
+    content: |
+      [Peer]
+      PublicKey = {{ wireguard_client_public_key }}
+      AllowedIPs = {{ client.ip }}
+  notify: Enable and restart Wireguard interface
+
+- name: Generate client file locally
+  ansible.builtin.fetch:
+    src: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}.conf
+    dest: /tmp/wg_clients/
+  register: wireguard_config_fetch_result
+
+- name: Inform of generated config
+  ansible.builtin.debug:
+    msg:
+      - "Config generated at {{ wireguard_config_fetch_result.dest }}"
+      - Use qrencode -t ansiutf8 < {{ wireguard_config_fetch_result.dest }} to generate a QR code
