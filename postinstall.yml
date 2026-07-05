@@ -7,18 +7,22 @@
       ansible.builtin.apt:
         upgrade: true
         update_cache: true
+      tags: setup
 
     - name: Install basic packages
       ansible.builtin.apt:
         name: "{{ base_packages }}"
         state: present
+      tags: setup
 
     - name: Check if changing the hostname is needed
       ansible.builtin.set_fact:
         change_hostname: "{{ hostname is defined and hostname != ansible_facts.hostname }}"
+      tags: setup
 
     - name: Change hostname from default
       when: change_hostname
+      tags: setup
       block:
         - name: Set hostname facts
           ansible.builtin.set_fact:

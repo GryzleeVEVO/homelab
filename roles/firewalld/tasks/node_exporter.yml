@@ -3,13 +3,11 @@
     name: firewalld
   register: firewalld_service
 
-- name: Open ports if active
+- name: Open node_exporter
   when: firewalld_service.status.ActiveState == "active"
-  block:
-    - name: Open node_exporter
-      ansible.posix.firewalld:
-        zone: public
-        service: prometheus-node-exporter
-        state: enabled
-        permanent: true
-      notify: Reload firewalld config
+  ansible.posix.firewalld:
+    zone: public
+    service: prometheus-node-exporter
+    state: enabled
+    permanent: true
+  notify: Reload firewalld config

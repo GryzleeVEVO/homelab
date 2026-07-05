@@ -3,12 +3,14 @@
   ansible.builtin.apt:
     package: firewalld
     state: present
+  notify: Enable and start firewalld
 
 - name: Set default zone to public
   ansible.builtin.command: firewall-cmd --set-default-zone=public
   register: firewalld_default_zone_set
   changed_when:
     - '"ZONE_ALREADY_SET" not in firewalld_default_zone_set.stderr'
+  notify: Reload firewalld config
 
 - name: Disable forwarding
   ansible.posix.firewalld:
@@ -16,6 +18,7 @@
     state: enabled
     forward: false
     permanent: true
+  notify: Reload firewalld config
 
 - name: Allow SSH traffic
   ansible.posix.firewalld:
@@ -23,8 +26,4 @@
     service: ssh
     state: enabled
     permanent: true
-
-- name: Reload config
-  ansible.builtin.command: firewall-cmd --reload
-  changed_when: true
-  notify: Enable and start firewalld
+  notify: Reload firewalld config

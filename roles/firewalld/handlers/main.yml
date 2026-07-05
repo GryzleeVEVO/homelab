@@ -4,3 +4,8 @@
     name: firewalld
     state: started
     enabled: true
+
+- name: Reload firewalld config
+  ansible.builtin.command: firewall-cmd --reload
+  changed_when: true
+  notify: Enable and start firewalld
