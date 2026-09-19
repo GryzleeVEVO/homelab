@@ -22,6 +22,22 @@ services:
     group_add: [{{ render_group }}]
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
+    healthcheck:
+      test: curl -f http://localhost:8096/health
+      <<: *healthcheck
+
+  navidrome:
+    image: deluan/navidrome:{{ version_tags.navidrome }}
+    container_name: navidrome
+    restart: unless-stopped
+    ports:
+      - 4533:4533
+    volumes:
+      - navidrome-data:/data
+      - /data/mediaserver/media/music:/music:ro
+    healthcheck:
+      test: curl -f http://localhost:4533/ping
+      <<: *healthcheck
 
   radarr:
     image: linuxserver/radarr:{{ version_tags.radarr }}
@@ -117,6 +133,7 @@ services:
       - qbittorrent-config:/config
       - /data/mediaserver:/data
 
+
 volumes:
   jellyfin-config:
   jellyfin-cache:
@@ -125,3 +142,4 @@ volumes:
   lidarr-config:
   prowlarr-config:
   qbittorrent-config:
+  navidrome-data:

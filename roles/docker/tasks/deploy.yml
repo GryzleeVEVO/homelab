@@ -1,7 +1,7 @@
 ---
 - name: Create service directory
   ansible.builtin.file:
-    path: "/opt/services/{{ service }}"
+    path: "/opt/{{ service }}"
     state: directory
     mode: "0755"
 
@@ -34,7 +34,7 @@
 - name: Copy static files
   ansible.builtin.copy:
     src: "{{ item.path }}"
-    dest: "/opt/services/{{ service }}/{{ item.path | relpath(playbook_dir + '/docker/' + service) }}"
+    dest: "/opt/{{ service }}/{{ item.path | relpath(playbook_dir + '/docker/' + service) }}"
     mode: "0644"
   loop: "{{ static_files.files }}"
   loop_control:
@@ -43,7 +43,7 @@
 - name: Copy templates
   ansible.builtin.template:
     src: "{{ item.path }}"
-    dest: "/opt/services/{{ service }}/{{ (item.path | relpath(playbook_dir + '/docker/' + service)) | regex_replace('\\.j2$', '') }}"
+    dest: "/opt/{{ service }}/{{ (item.path | relpath(playbook_dir + '/docker/' + service)) | regex_replace('\\.j2$', '') }}"
     mode: "0644"
   loop: "{{ template_files.files }}"
   loop_control:
@@ -51,7 +51,7 @@
 
 - name: Start services
   community.docker.docker_compose_v2:
-    project_src: "/opt/services/{{ service }}"
+    project_src: "/opt/{{ service }}"
     pull: always
     state: present
     recreate: always

@@ -48,6 +48,10 @@ all:
           # Allowed accesible IPs
           allowed_ips: 192.168.5.0/24
 
+      # DNS server for connected peers
+      wireguard_dns_servers:
+        - 1.1.1.1
+
       #
       # --- Docker ---
       #
@@ -93,4 +97,3 @@ all:
         GF_SMTP_HOST: '"smtp.gmail.com:25"'
         GF_SMTP_USER: foobar@example.com
         GF_SMTP_PASSWORD: verysecurepassword
-

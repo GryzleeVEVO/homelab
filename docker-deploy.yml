@@ -2,12 +2,6 @@
   hosts: all
   become: true
   tasks:
-    - name: Create /opt/services
-      ansible.builtin.file:
-        path: /opt/services/
-        state: directory
-        mode: "0755"
-
     - name: Deploy service
       ansible.builtin.include_role:
         name: docker
