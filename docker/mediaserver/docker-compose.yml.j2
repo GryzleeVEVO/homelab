@@ -7,25 +7,24 @@ x-healthcheck: &healthcheck
 
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.11
+    image: jellyfin/jellyfin:{{ version_tags.jellyfin }}
     container_name: jellyfin
     hostname: jellyfin
     restart: unless-stopped
     user: 1000:1000
     ports:
-      - 8096:8096/tcp   # WEB
-    # - 7359:7359/udp   # DLNA
+      - 8096:8096/tcp
     volumes:
       - jellyfin-config:/config
       - jellyfin-cache:/cache
-      - /data/mediaserver/media:/media:ro
+      - /data/mediaserver/media:/media
     # Hardware acceleration
     group_add: [{{ render_group }}]
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
 
   radarr:
-    image: linuxserver/radarr:6.1.1
+    image: linuxserver/radarr:{{ version_tags.radarr }}
     container_name: radarr
     restart: unless-stopped
     depends_on:
@@ -44,7 +43,7 @@ services:
       <<: *healthcheck
 
   sonarr:
-    image: linuxserver/sonarr:4.0.17
+    image: linuxserver/sonarr:{{ version_tags.sonarr }}
     container_name: sonarr
     restart: unless-stopped
     depends_on:
@@ -63,7 +62,7 @@ services:
       <<: *healthcheck
 
   lidarr:
-    image: linuxserver/lidarr:3.1.0
+    image: linuxserver/lidarr:{{ version_tags.lidarr }}
     container_name: lidarr
     restart: unless-stopped
     depends_on:
@@ -82,7 +81,7 @@ services:
       <<: *healthcheck
 
   prowlarr:
-    image: linuxserver/prowlarr:2.3.5
+    image: linuxserver/prowlarr:{{ version_tags.prowlarr }}
     container_name: prowlarr
     restart: unless-stopped
     ports:
@@ -97,7 +96,7 @@ services:
       <<: *healthcheck
 
   flaresolverr:
-    image: flaresolverr/flaresolverr:v3.5.0
+    image: flaresolverr/flaresolverr:{{ version_tags.flaresolverr }}
     container_name: flaresolverr
     restart: unless-stopped
     healthcheck:
@@ -105,7 +104,7 @@ services:
       <<: *healthcheck
 
   qbittorrent:
-    image: qbittorrentofficial/qbittorrent-nox:5.2.1-1
+    image: qbittorrentofficial/qbittorrent-nox:{{ version_tags.qbittorrent }}
     container_name: qbittorrent
     restart: unless-stopped
     ports:
