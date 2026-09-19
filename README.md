@@ -64,6 +64,7 @@ the system and the VPN.
 The media setup consist of:
 
 - **Jellyfin** for browsing and playing back media
+- **Navidrome** for streaming music
 - The **arr* stack for fetching new media:
     - **Radarr** for movies
     - **Sonarr** for shows
