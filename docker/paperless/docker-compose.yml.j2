@@ -9,8 +9,8 @@ services:
     ports:
       - 8100:8000
     volumes:
-      - paperless-data:/usr/src/paperless/data
-      - paperless-media:/usr/src/paperless/media
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
       - ./export:/usr/src/paperless/export
       - ./consume:/usr/src/paperless/consume
     environment:
@@ -29,21 +29,21 @@ services:
     container_name: paperless-broker
     restart: unless-stopped
     volumes:
-      - paperless-redisdata:/data
+      - redisdata:/data
 
   db:
     image: postgres:18
     container_name: paperless-db
     restart: unless-stopped
     volumes:
-      - paperless-pgdata:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: {{ paperless_pg_password }}
 
 volumes:
-  paperless-data:
-  paperless-media:
-  paperless-pgdata:
-  paperless-redisdata:
+  data:
+  media:
+  pgdata:
+  redisdata:
