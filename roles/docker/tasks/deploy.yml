@@ -31,6 +31,25 @@
     label: "{{ item.path | basename }}"
   delegate_to: localhost
 
+- name: Create subdirectories for files
+  ansible.builtin.file:
+    path: "/opt/{{ service }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: >-
+    {{
+      (
+        (static_files.files | map(attribute='path') | list) +
+        (template_files.files | map(attribute='path') | list)
+      )
+      | map('relpath', playbook_dir + '/docker/' + service)
+      | map('dirname')
+      | select('ne', '')
+      | unique
+      | sort
+      | list
+    }}
+
 - name: Copy static files
   ansible.builtin.copy:
     src: "{{ item.path }}"
