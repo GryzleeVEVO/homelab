@@ -2,3 +2,17 @@
 - name: Install Docker
   ansible.builtin.import_role:
     name: geerlingguy.docker
+
+- name: Check if anacrontab present
+  ansible.builtin.stat:
+    path: /etc/anacrontab
+  register: anacrontab_is_present
+
+- name: Add anacrontab entry for cleaning up Docker
+  when: anacrontab_is_present.stat.exists
+  ansible.builtin.lineinfile:
+    path: /etc/anacrontab
+    regexp: '^\s*\d+\s+\d+\s+docker-cleanup\s+.*$'
+    line: '7 0 docker-cleanup docker system prune -f'
+    insertafter: EOF
+    state: present
