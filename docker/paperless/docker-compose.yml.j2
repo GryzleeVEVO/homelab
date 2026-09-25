@@ -1,3 +1,9 @@
+x-healthcheck: &healthcheck
+  start_period: 10s
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
 services:
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:{{ version_tags.paperless }}
@@ -23,6 +29,9 @@ services:
       PAPERLESS_OCR_LANGUAGE: spa
       USERMAP_UID: 1000
       USERMAP_GID: 1000
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
 
   broker:
     image: valkey/valkey:9-alpine

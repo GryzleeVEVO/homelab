@@ -1,6 +1,12 @@
+x-healthcheck: &healthcheck
+  start_period: 10s
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
 services:
   registry:
-    image: registry:3
+    image: registry:{{ version_tags.registry }}
     container_name: registry
     restart: unless-stopped
     ports:
@@ -12,14 +18,16 @@ services:
       REGISTRY_HTTP_HEADERS_Access-Control-Allow-Credentials: '[true]'
       REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '[Authorization,Accept,Cache-Control]'
       REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: '[Docker-Content-Digest]'
-      # Allow deleting images
       REGISTRY_STORAGE_DELETE_ENABLED: 'true'
 {% for k, v in docker_registry_ui_env.items() %}
       {{ k }}: {{ v }}
 {% endfor %}
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5000/v2/"]
 
   registry-ui:
-    image: joxit/docker-registry-ui:main
+    image: joxit/docker-registry-ui:{{ version_tags.registry_ui }}
     container_name: registry-ui
     restart: unless-stopped
     ports:
@@ -36,6 +44,9 @@ services:
       - TAGLIST_PAGE_SIZE=100
       - REGISTRY_SECURED=false
       - CATALOG_ELEMENTS_LIMIT=1000
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
 
 volumes:
   data:

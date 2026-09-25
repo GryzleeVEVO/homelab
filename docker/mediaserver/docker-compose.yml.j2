@@ -132,7 +132,9 @@ services:
     volumes:
       - qbittorrent-config:/config
       - /data/mediaserver:/data
-
+    healthcheck:
+      test: curl -f http://localhost:6880
+      <<: *healthcheck
 
 volumes:
   jellyfin-config:
