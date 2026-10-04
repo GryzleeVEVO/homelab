@@ -1,0 +1,36 @@
+---
+- name: Install prerequisites
+  ansible.builtin.apt:
+    package:
+      - cowsay
+      - fortune
+      - lolcat
+
+- name: Clone yboetz/motd
+  ansible.builtin.git:
+    repo: https://github.com/yboetz/motd
+    dest: /opt/motd
+    version: master
+
+- name: Remove copyright disclamer MOTD
+  ansible.builtin.file:
+    path: /etc/motd
+    state: absent
+
+- name: Remove uname MOTD
+  ansible.builtin.file:
+    path: /etc/update-motd.d/10-uname
+    state: absent
+
+- name: Copy MOTD files from yboetz/motd
+  ansible.builtin.copy:
+    remote_src: true
+    src: /opt/motd/20-sysinfo
+    dest: /etc/update-motd.d/20-sysinfo
+    mode: preserve
+
+- name: Copy MOTD files from role
+  ansible.builtin.copy:
+    src: 00-qotd
+    dest: /etc/update-motd.d/00-qotd
+    mode: "0755"

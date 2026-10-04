@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/games/fortune -s | /usr/games/cowsay | /usr/games/lolcat --truecolor -f

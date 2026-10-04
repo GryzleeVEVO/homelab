@@ -1,6 +1,6 @@
 ---
 - name: Check prerequisites
-  assert:
+  ansible.builtin.assert:
     that: wol_remote_user is defined
 
 - name: Install prerequisites
