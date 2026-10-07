@@ -88,7 +88,8 @@
 - name: Generate client file locally
   ansible.builtin.fetch:
     src: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}.conf
-    dest: /tmp/wg_clients/
+    dest: "/tmp/wg_clients/{{ inventory_hostname }}/{{ client.name }}.conf"
+    flat: true
   register: wireguard_config_fetch_result
 
 - name: Inform of generated config

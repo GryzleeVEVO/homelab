@@ -1,0 +1,33 @@
+---
+argument_specs:
+  main:
+    short_description: Configure WireGuard peers
+    options:
+      wireguard_server_ip:
+        description: Private IP of the local peer.
+        type: str
+        required: true
+      wireguard_server_public_endpoint:
+        description: Public IP of the local peer.
+        type: str
+        required: true
+      wireguard_clients:
+        description: List of WireGuard peers to configure.
+        type: list
+        elements: dict
+        required: true
+        options:
+          name:
+            description: Unique name for the peer.
+            type: str
+            required: true
+          ip:
+            description: IP address of the remote peer.
+            type: str
+            required: true
+          allowed_ips:
+            description: >-
+              Comma-separated list of networks or addresses the peer is allowed
+              to access, in CIDR notation.
+            type: str
+            required: true

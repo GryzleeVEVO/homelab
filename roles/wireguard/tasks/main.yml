@@ -1,0 +1,17 @@
+- name: Set up server
+  ansible.builtin.import_tasks: new_server.yml
+  tags: new_server
+
+- name: Set up clients
+  ansible.builtin.include_tasks:
+    file: add_client.yml
+    apply:
+      tags: add_clients
+  loop: "{{ wireguard_clients | default([]) }}"
+  loop_control:
+    loop_var: client
+  tags: add_clients
+
+- name: Remove clients
+  ansible.builtin.import_tasks: remove_clients.yml
+  tags: remove_clients

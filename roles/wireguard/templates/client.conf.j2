@@ -7,6 +7,6 @@ DNS = {{ wireguard_dns_servers | join(', ') }}
 
 [Peer]
 PublicKey = {{ wireguard_server_public_key }}
-Endpoint = {{ client.endpoint }}
+Endpoint = {{ wireguard_server_public_endpoint }}
 AllowedIPs = {{ client.allowed_ips }}
 PersistentKeepalive = 25

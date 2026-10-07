@@ -1,0 +1,11 @@
+# Port for the local peer.
+#
+# Defaults to Wireguard's default port number.
+wireguard_server_port: 51820
+
+# List of DNS servers to use while tunneling.
+#
+# Defaults to using Cloudflare. If you have an internal DNS server (e.g.
+# Pi-hole), you may add it here.
+wireguard_dns_servers:
+  - 1.1.1.1

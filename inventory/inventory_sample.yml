@@ -34,23 +34,12 @@ all:
       # --- Wireshark ---
       #
 
-      # IP/Port for this peer
       wireguard_server_ip: 10.0.0.1/24
-      wireguard_server_port: 51820
-
-      # Peers
+      wireguard_server_public_endpoint: 192.168.10.1:51820
       wireguard_clients:
         - name: example_host
-          # Remote peer IP
           ip: 10.0.0.2
-          # Local peer endpoint with exposed port
-          endpoint: 192.168.10.1:51820
-          # Allowed accesible IPs
           allowed_ips: 192.168.5.0/24
-
-      # DNS server for connected peers
-      wireguard_dns_servers:
-        - 1.1.1.1
 
       #
       # --- Docker ---
