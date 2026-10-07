@@ -11,6 +11,15 @@
     name: firewalld
     tasks_from: wireguard.yml
 
+- name: Remove server keys when rotating
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/wireguard/server_private.key
+    - /etc/wireguard/server_public.key
+  when: rotate_server | default(false) | bool
+
 - name: Generate server keys
   block:
     - name: Generate private key

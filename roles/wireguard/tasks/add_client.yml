@@ -24,6 +24,16 @@
     state: directory
     mode: "0700"
 
+- name: Remove client keys when rotating
+  ansible.builtin.file:
+    path: "/etc/wireguard/clients/{{ client.name }}/{{ client.name }}_{{ item }}.key"
+    state: absent
+  loop: [private, public]
+  when: >-
+    (rotate_all | default(false) | bool)
+    or (rotate_server | default(false) | bool)
+    or client.name in (rotate_clients | default('')).split(',')
+
 - name: Generate client keys
   block:
     - name: Generate private key
