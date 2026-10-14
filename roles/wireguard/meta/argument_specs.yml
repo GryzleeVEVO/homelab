@@ -1,7 +1,7 @@
 ---
 argument_specs:
   main:
-    short_description: Configure WireGuard peers
+    short_description: Configure WireGuard peers.
     options:
       wireguard_server_ip:
         description: Private IP of the local peer.

@@ -1,3 +1,4 @@
+---
 - name: Set up server
   ansible.builtin.import_tasks: new_server.yml
   tags: new_server

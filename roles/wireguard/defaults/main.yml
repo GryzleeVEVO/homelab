@@ -1,3 +1,4 @@
+---
 # Port for the local peer.
 #
 # Defaults to Wireguard's default port number.
