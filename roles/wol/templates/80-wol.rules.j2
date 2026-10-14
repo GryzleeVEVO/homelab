@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="{{ ansible_facts[wol_interface].macaddress }}", RUN+="/usr/sbin/ethtool -s $name wol g"

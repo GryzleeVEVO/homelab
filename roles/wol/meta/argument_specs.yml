@@ -1,0 +1,17 @@
+---
+argument_specs:
+  main:
+    short_description: Enable and set up Wake-on-LAN.
+    options:
+      wol_remote_user:
+        description: User for remote shutdowns and suspends.
+        type: str
+        required: true
+      wol_interface:
+        description: Interface on which to enable Wake-on-LAN.
+        type: str
+        required: true
+      wol_alx:
+        description: Install patched module for ALX driver.
+        type: bool
+        required: false

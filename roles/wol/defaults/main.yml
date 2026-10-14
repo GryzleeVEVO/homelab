@@ -1,0 +1,7 @@
+---
+# Install a patched kernel module for Atheros/Killer NICs.
+wol_alx: false
+
+# Allow passwordless shutdowns and suspends for this user. Defaults to the
+# same username Ansible connects to the host before escalation.
+wol_remote_user: "{{ ansible_user }}"

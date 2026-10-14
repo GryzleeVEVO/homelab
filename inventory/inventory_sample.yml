@@ -26,9 +26,8 @@ all:
       # --- Wake-on-LAN ---
       #
 
-      # The defined user will be able to suspend and power off the host remotely
-      # without psasword
       wol_remote_user: user
+      wol_interface: eth0
 
       #
       # --- Wireshark ---

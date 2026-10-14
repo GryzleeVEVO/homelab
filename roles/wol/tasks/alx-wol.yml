@@ -1,0 +1,25 @@
+---
+- name: Install prerequisites
+  ansible.builtin.apt:
+    package:
+      - linux-headers-amd64
+      - dkms
+      - git
+      - wget
+
+- name: Clone AndiWeiss/alx-wol
+  ansible.builtin.git:
+    repo: https://github.com/AndiWeiss/alx-wol
+    dest: /opt/alx-wol
+    version: master
+
+# This will reinstall the module with the latest version if already
+# installed
+- name: Install alx-wol DKMS module
+  ansible.builtin.command:
+    cmd: ./install.sh
+    chdir: /opt/alx-wol
+    stdin: "y\n"
+  register: wol_install
+  changed_when: wol_install.stdout is search('### installation of alx-wol version .* succeeded')
+  failed_when: "'FAILED installation of alx-wol' in wol_install.stdout or wol_install.rc != 0"
