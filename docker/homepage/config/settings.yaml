@@ -1,0 +1,22 @@
+---
+title: Homelab
+
+color: zinc
+
+layout:
+  Repositories:
+    style: row
+    columns: 2
+    header: false
+  Media:
+    style: row
+    columns: 4
+  Monitoring and observability:
+    style: row
+    columns: 4
+  Library management:
+    style: row
+    columns: 3
+  Networking and infrastructure:
+    style: row
+    columns: 4

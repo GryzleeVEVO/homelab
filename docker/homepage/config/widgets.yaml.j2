@@ -1,0 +1,23 @@
+---
+- datetime:
+    text_size: l
+    locale: gb
+    format:
+      timeStyle: medium
+      dateStyle: medium
+      hourCycle: h23
+
+- resources:
+    cpu: true
+    memory: true
+    cputemp: true
+    disk:
+      - /
+      - {{ media_directory }}
+
+- openmeteo:
+    {{ homepage_openmeteo_data }}
+    units: metric
+    cache: 5
+    format:
+      maximumFractionDigits: 1
