@@ -8,9 +8,6 @@ all:
         - curl
         - htop
 
-      # "render" group, needed to access hardware acceleration
-      render_group: 992
-
       # Versions of apps/images to pull
       version_tags:
         qbittorrent: 5.2.3-1
