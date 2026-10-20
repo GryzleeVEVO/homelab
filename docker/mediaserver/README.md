@@ -3,6 +3,16 @@
 Docker Compose project that sets up a fully-featured media stack that
 fetches, downloads and plays back music, shows and movies.
 
+It consists of:
+
+- **Jellyfin**: media server.
+- **Navidrome**: music streaming.
+- **Radarr**: Search and download movies.
+- **Sonarr**: Search and download shows.
+- **Lidarr**: Search and download music.
+- **Prowlarr**: Indexer manager for the *arrs.
+- **Qbittorrent**: Bittorrent client.
+
 ## Requirements
 
 **Docker** is required to be installed. It can be installed using the `docker`
