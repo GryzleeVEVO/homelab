@@ -21,7 +21,8 @@ No tags exist for this project.
 ## Variables
 
 - `version_tags`: Dictionary with the versions for each service.
-- `grafana_env`: List of envionment variables to pass to Grafana.
+- `grafana_env`: List of envionment variables to pass to Grafana, mainly the
+    SMTP credentials.
 
 ## Dependencies
 
