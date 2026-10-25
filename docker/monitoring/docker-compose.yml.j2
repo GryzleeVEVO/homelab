@@ -1,3 +1,4 @@
+---
 x-healthcheck: &healthcheck
   start_period: 10s
   interval: 30s
@@ -10,6 +11,7 @@ services:
     container_name: grafana
     restart: unless-stopped
     environment:
+      GF_LOG_LEVEL: "warn"
 {% for k, v in grafana_env.items() %}
       {{ k }}: {{ v }}
 {% endfor %}
@@ -40,8 +42,10 @@ services:
     restart: unless-stopped
     ports:
       - 3100:3100
+    command: "-config.file=/etc/loki/config.yml"
     volumes:
       - loki-data:/loki
+      - ./loki/config.yml:/etc/loki/config.yml
     # Loki removed busybox from the image, so it can't send a health check
 
 volumes:

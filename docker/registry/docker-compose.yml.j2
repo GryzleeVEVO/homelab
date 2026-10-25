@@ -1,3 +1,4 @@
+---
 x-healthcheck: &healthcheck
   start_period: 10s
   interval: 30s
@@ -14,10 +15,11 @@ services:
     volumes:
       - data:/var/lib/registry
     environment:
-      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '[HEAD,GET,OPTIONS,DELETE]'
       REGISTRY_HTTP_HEADERS_Access-Control-Allow-Credentials: '[true]'
       REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '[Authorization,Accept,Cache-Control]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '[HEAD,GET,OPTIONS,DELETE]'
       REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: '[Docker-Content-Digest]'
+      REGISTRY_LOG_LEVEL: "warn"
       REGISTRY_STORAGE_DELETE_ENABLED: 'true'
 {% for k, v in docker_registry_ui_env.items() %}
       {{ k }}: {{ v }}
