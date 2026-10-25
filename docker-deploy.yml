@@ -6,7 +6,6 @@
       ansible.builtin.getent:
         database: group
         key: render
-      when: "'mediaserver' in docker_services"
 
     - name: Store render GID
       ansible.builtin.set_fact:
