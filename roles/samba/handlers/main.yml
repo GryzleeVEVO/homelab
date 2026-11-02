@@ -9,3 +9,8 @@
     name: nmbd
     state: started
     enabled: true
+
+- name: Reload smbd
+  ansible.builtin.service:
+    name: smbd
+    state: reloaded
