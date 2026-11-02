@@ -1,0 +1,191 @@
+---
+- Media:
+{% if "jellyfin" in homepage_services %}
+    - Jellyfin:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg
+        href: {{ homepage_services.jellyfin.url }}
+        description: Stream movies and shows
+        container: jellyfin
+        widget:
+            type: jellyfin
+            url: {{ homepage_services.jellyfin.url }}
+            key: {{ jellyfin_api_key }}
+            version: 2
+            enableBlocks: true
+            enableNowPlaying: true
+            enableUser: false
+            enableMediaControl: false
+            showEpisodeNumber: false
+            expandOneStreamToTwoRows: false
+{% endif %}
+
+{% if "navidrome" in homepage_services %}
+    - Navidrome:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/navidrome.svg
+        href: {{ homepage_services.navidrome }}
+        description: Stream music
+        container: navidrome
+        widget:
+            type: navidrome
+            url: {{ homepage_services.navidrome }}
+            user: {{ navidrome_username }}
+            token: {{ navidrome_password }}
+            salt: {{ navidrome_salt }}
+{% endif %}
+
+{% if "paperless" in homepage_services %}
+    - Paperless-ngx:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless-ngx.svg
+        href: {{ homepage_services.paperless.url }}
+        description: Document scanner and manager
+        container: paperless-ngx
+{% endif %}
+
+{% if "immich" in homepage_services %}
+    - Immich:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg
+        href: {{ homepage_services.immich.url }}
+        description: Image and video manager
+        container: immich_server
+{% endif %}
+
+- Monitoring and observability:
+{% if "grafana" in homepage_services %}
+    - Grafana:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg
+        href: {{ homepage_services.grafana.url }}
+        description: Visualize metrics, traces and logs
+        container: grafana
+        widget:
+            type: grafana
+            version: 2
+            alerts: grafana
+            url: {{ homepage_services.grafana.url }}
+            username: {{ grafana_username }}
+            password: {{ grafana_password }}
+{% endif %}
+
+{% if "prometheus" in homepage_services %}
+    - Prometheus:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prometheus.svg
+        href: {{ homepage_services.prometheus.url }}
+        description: Time-series database for metrics
+        container: prometheus
+{% endif %}
+
+{% if "loki" in homepage_services %}
+    - Loki:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/loki.svg
+        href: {{ homepage_services.loki.url }}
+        description: Database for logs
+        container: loki
+{% endif %}
+
+{% if "alloy" in homepage_services %}
+    - Alloy:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/alloy.svg
+        href: {{ homepage_services.alloy.url }}
+        description: Logs and metrics collector
+        ping: {{ homepage_services.alloy.url }}
+        statusStyle: basic
+{% endif %}
+
+- Library management:
+{% if "radarr" in homepage_services %}
+    - Radarr:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg
+        href: {{ homepage_services.radarr.url }}
+        description: Search and download new movies
+        container: radarr
+        widget:
+            type: radarr
+            url: {{ homepage_services.radarr.url }}
+            key: {{ radarr_api_key }}
+            enableQueue: true
+{% endif %}
+
+{% if "sonarr" in homepage_services %}
+    - Sonarr:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg
+        href: {{ homepage_services.sonarr.url }}
+        description: Search and download new shows
+        container: sonarr
+        widget:
+            type: sonarr
+            url: {{ homepage_services.sonarr.url }}
+            key: {{ sonarr_api_key }}
+            enableQueue: true
+{% endif %}
+
+{% if "lidarr" in homepage_services %}
+    - Lidarr:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lidarr.svg
+        href: {{ homepage_services.lidarr.url }}
+        description: Search and download new songs
+        container: lidarr
+        widget:
+            type: lidarr
+            url: {{ homepage_services.lidarr.url }}
+            key: {{ lidarr_api_key }}
+{% endif %}
+
+{% if "prowlarr" in homepage_services %}
+    - Prowlarr:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg
+        href: {{ homepage_services.prowlarr.url }}
+        description: Indexer manager for the *arr stack
+        container: prowlarr
+        widget:
+            type: prowlarr
+            url: {{ homepage_services.prowlarr.url }}
+            key: {{ prowlarr_api_key }}
+{% endif %}
+
+{% if "qbittorrent" in homepage_services %}
+    - Qbittorrent:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg
+        href: {{ homepage_services.qbittorrent.url }}
+        description: Bittorrent client
+        container: qbittorrent
+        widget:
+            type: qbittorrent
+            url: {{ homepage_services.qbittorrent.url }}
+            username: {{ qbittorrent_username }}
+            password: {{ qbittorrent_password }}
+            # key: qbt_apikey # required if using API key instead of username/password
+            enableLeechProgress: true # optional, defaults to false
+            enableLeechSize: true # optional, defaults to false
+{% endif %}
+
+{% if "pihole" in homepage_services %}
+- Networking and infrastructure:
+    - Pi-hole:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pi-hole.svg
+        href: {{ homepage_services.pihole.url }}
+        description: Ad-blocking DNS server
+        container: pihole
+{% endif %}
+
+{% if "docker_registry" in homepage_services %}
+    - Docker Registry UI:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/docker.svg
+        href: {{ homepage_services.docker_registry.url }}
+        description: Web UI for local Docker registries
+        container: registry-ui
+{% endif %}
+
+{% if "router" in homepage_services %}
+    - Router:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/router.svg
+        href: {{ homepage_services.router.url }}
+        ping: {{ homepage_services.router.url }}
+        statusStyle: basic
+{% endif %}
+
+{% if "printer" in homepage_services %}
+    - Printer:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/printer.svg
+        href: {{ homepage_services.printer.url }}
+        ping: {{ homepage_services.printer.url }}
+        statusStyle: basic
+{% endif %}
