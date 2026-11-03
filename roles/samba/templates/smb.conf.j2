@@ -9,14 +9,6 @@
 
 #### Networking ####
 
-# Bind to these interfaces only
-;  interfaces = lo enp7s0
-;  bind interfaces only = yes
-
-# Network whitelist
-;  hosts allow = localhost 192.168.1.0/24 10.10.10.0/24
-;  hosts deny = ALL
-
 # Disable Netbios and don't listen on port 445
    smb ports = 445
    disable netbios = yes
@@ -73,12 +65,11 @@
    printcap name = /dev/null
    disable spoolss = yes
 
-#======================= Share Definitions =======================
-
-[foobar]
-   path = FILLME
-   valid users = MYSELF
-   read only = yes
-   browseable = yes
+{% for share in samba_shares %}
+[{{ share.name }}]
+   path = {{ share.path }}
+   read only = {{ 'yes' if share.readonly else 'no' }}
+   browseable = {{ 'yes' if share.browseable else 'no' }}
    create mask = 0644
    directory mask = 0755
+{% endfor %}
