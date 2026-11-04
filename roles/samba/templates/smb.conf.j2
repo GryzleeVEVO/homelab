@@ -1,0 +1,75 @@
+#======================= Global Settings =======================
+
+[global]
+
+## Browsing/Identification ###
+
+# Change this to the workgroup/NT-domain name your Samba server will part of
+   workgroup = WORKGROUP
+
+#### Networking ####
+
+# Disable Netbios and don't listen on port 445
+   smb ports = 445
+   disable netbios = yes
+
+#### Debugging/Accounting ####
+
+# This tells Samba to use a separate log file for each machine
+# that connects
+   log file = /var/log/samba/log.%m
+
+# Cap the size of the individual log files (in KiB).
+   max log size = 1000
+
+# We want Samba to only log to /var/log/samba/log.{smbd,nmbd}.
+# Append syslog@1 if you want important messages to be sent to syslog too.
+   logging = file
+
+# Do something sensible when Samba crashes: mail the admin a backtrace
+   panic action = /usr/share/samba/panic-action %d
+
+
+####### Authentication #######
+
+# Run as a standalone server
+   server role = standalone server
+
+# Check logins against PAM policies
+   obey pam restrictions = yes
+
+# Disallow changing the Unix password from SMB
+   unix password sync = no
+   pam password change = no
+
+# Disable guest and anonyomus accounts entirely
+   map to guest = never
+   restrict anonymous = 2
+
+# Use modern protocols
+   server min protocol = SMB3
+
+# Always encrypt traffic
+   server signing = mandatory
+   server smb encrypt = required
+
+############ Misc ############
+
+# Disallow users from creating public shares
+   usershare allow guests = no
+   usershare max shares = 0
+
+# Disable printing
+   load printers = no
+   printing = bsd
+   printcap name = /dev/null
+   disable spoolss = yes
+
+{% for share in samba_shares %}
+[{{ share.name }}]
+   path = {{ share.path }}
+   read only = {{ 'yes' if share.readonly else 'no' }}
+   browseable = {{ 'yes' if share.browseable else 'no' }}
+   create mask = 0644
+   directory mask = 0755
+{% endfor %}

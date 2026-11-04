@@ -13,6 +13,6 @@
   ansible.builtin.lineinfile:
     path: /etc/anacrontab
     regexp: '^\s*\d+\s+\d+\s+docker-cleanup\s+.*$'
-    line: '7 0 docker-cleanup docker system prune -f'
+    line: "7 0 docker-cleanup docker system prune -f"
     insertafter: EOF
     state: present

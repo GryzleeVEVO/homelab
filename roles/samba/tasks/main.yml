@@ -1,3 +1,4 @@
+---
 - name: Install Samba and NTFS driver
   ansible.builtin.apt:
     name:
@@ -7,7 +8,17 @@
     - Enable and start smbd
     - Disable and stop nmbd
 
+- name: Install Samba configuration
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: "0644"
+    validate: testparm -s %s
+  notify: Reload smbd
+
 - name: Tell firewalld to open port
   ansible.builtin.include_role:
     name: firewalld
-    tasks_from: node_exporter
+    tasks_from: samba

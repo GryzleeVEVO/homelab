@@ -17,7 +17,7 @@ services:
     volumes:
       - jellyfin-config:/config
       - jellyfin-cache:/cache
-      - /data/mediaserver/media:/media
+      - {{ media_directory }}/media:/media
     # Hardware acceleration
     group_add: [{{ render_group }}]
     devices:
@@ -34,7 +34,7 @@ services:
       - 4533:4533
     volumes:
       - navidrome-data:/data
-      - /data/mediaserver/media/music:/music:ro
+      - {{ media_directory }}/media/music:/music:ro
     healthcheck:
       test: curl -f http://localhost:4533/ping
       <<: *healthcheck
@@ -50,7 +50,7 @@ services:
       - 7878:7878
     volumes:
       - radarr-config:/config
-      - /data/mediaserver:/data
+      - {{ media_directory }}:/data
     environment:
       PUID: 1000
       PGID: 1000
@@ -72,7 +72,7 @@ services:
       PGID: 1000
     volumes:
       - sonarr-config:/config
-      - /data/mediaserver:/data
+      - {{ media_directory }}:/data
     healthcheck:
       test: curl -f http://localhost:8989/ping
       <<: *healthcheck
@@ -91,7 +91,7 @@ services:
       PGID: 1000
     volumes:
       - lidarr-config:/config
-      - /data/mediaserver:/data
+      - {{ media_directory }}:/data
     healthcheck:
       test: curl -f http://localhost:8686/ping
       <<: *healthcheck
@@ -131,7 +131,7 @@ services:
       - QBT_WEBUI_PORT=6880
     volumes:
       - qbittorrent-config:/config
-      - /data/mediaserver:/data
+      - {{ media_directory }}:/data
     healthcheck:
       test: curl -f http://localhost:6880
       <<: *healthcheck

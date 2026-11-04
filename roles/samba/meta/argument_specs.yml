@@ -1,0 +1,23 @@
+---
+argument_specs:
+  main:
+    short_description: Configure Samba shares.
+    options:
+      samba_shares:
+        description: Dictionary of shares to create.
+        type: list
+        elements: dict
+        required: true
+        options:
+          name:
+            description: Share name
+            type: str
+            required: true
+          readonly:
+            description: Make the share read only.
+            type: bool
+            required: true
+          browseable:
+            description: Make the share discoverable by all users.
+            type: bool
+            required: true

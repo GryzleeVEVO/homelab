@@ -1,0 +1,9 @@
+---
+- Repositories:
+    - Homelab (Github):
+        - href: https://github.com/GryzleeVEVO/homelab
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github.svg
+
+    - Dotfiles (Github):
+        - href: https://github.com/GryzleeVEVO/dotfiles
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github.svg

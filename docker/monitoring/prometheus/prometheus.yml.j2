@@ -1,5 +1,9 @@
+---
 global:
   scrape_interval: 15s
+
+runtime:
+  log_level: warn
 
 scrape_configs:
 {% if "prometheus" in prometheus_targets %}
