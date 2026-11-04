@@ -6,3 +6,8 @@
 - name: Install Alloy using official role
   ansible.builtin.import_role:
     name: grafana.grafana.alloy
+
+- name: Tell firewalld to open port
+  ansible.builtin.include_role:
+    name: firewalld
+    tasks_from: alloy

@@ -3,15 +3,11 @@ argument_specs:
   main:
     short_description: Enable and set up Wake-on-LAN.
     options:
-      wol_remote_user:
-        description: User for remote shutdowns and suspends.
+      alloy_monitor_services:
+        description: List of services to monitor
+        type: dict
+        required: true
+      alloy_loki_endpoint:
+        description: Loki API endpoint
         type: str
         required: true
-      wol_interface:
-        description: Interface on which to enable Wake-on-LAN.
-        type: str
-        required: true
-      wol_alx:
-        description: Install patched module for ALX driver.
-        type: bool
-        required: false

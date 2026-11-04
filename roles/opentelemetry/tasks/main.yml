@@ -1,0 +1,8 @@
+---
+- name: Install Alloy
+  ansible.builtin.import_tasks: alloy.yml
+  tags: alloy
+
+- name: Install node_exporter
+  ansible.builtin.import_tasks: node_exporter.yml
+  tags: node_exporter

@@ -1,0 +1,3 @@
+---
+alloy_env_file_vars:
+  CUSTOM_ARGS: --server.http.listen-addr=0:0:0:0:12345

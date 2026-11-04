@@ -57,7 +57,6 @@
     - name: Install firewalld
       ansible.builtin.import_role:
         name: firewalld
-      tags: firewalld
 
     - name: Set up sshd
       ansible.builtin.import_role:
@@ -80,11 +79,9 @@
         tasks_from: node_exporter.yml
       tags: node_exporter
 
-    - name: Install Alloy
+    - name: Install OTEL components
       ansible.builtin.import_role:
         name: opentelemetry
-        tasks_from: alloy.yml
-      tags: alloy
 
     - name: Install Docker
       ansible.builtin.import_role:
