@@ -38,7 +38,7 @@ The `docker` task must be run at least once before running the playbook.
   vars:
     service: immich
   tasks:
-    - name: deploy service
+    - name: Deploy service
       ansible.builtin.import_role:
         name: docker
         tasks_from: deploy.yml
