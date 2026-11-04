@@ -1,3 +1,13 @@
+# Postinstall playbook
+#
+# Requirements:
+#
+# Install sudo and set up the connecting host as a sudoer
+#
+# Usage:
+#
+# ansible-playbook -i inventory/hosts.yml postinstall.yml
+
 ---
 - name: Run post-install tasks on host
   hosts: all
