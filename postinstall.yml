@@ -46,7 +46,7 @@
 
     - name: Install unattended-upgrades
       ansible.builtin.import_role:
-        name: unattended-upgrades
+        name: unattended_upgrades
       tags: unattended-upgrades
 
     - name: Set up plocate

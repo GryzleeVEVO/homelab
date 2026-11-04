@@ -11,7 +11,7 @@
     paths: "{{ playbook_dir }}/docker/{{ service }}"
     patterns: "*.j2"
     recurse: true
-  register: template_files
+  register: docker_deploy_template_files
 
 - name: List static files
   delegate_to: localhost
@@ -20,13 +20,13 @@
     patterns: "*"
     excludes: "*.j2"
     recurse: true
-  register: static_files
+  register: docker_deploy_static_files
 
 - name: Validate templates before continuing
   ansible.builtin.assert:
     that: lookup('template', item.path) is string
     fail_msg: "Template {{ item.path }} failed to render"
-  loop: "{{ template_files.files }}"
+  loop: "{{ docker_deploy_template_files.files }}"
   loop_control:
     label: "{{ item.path | basename }}"
   delegate_to: localhost
@@ -39,8 +39,8 @@
   loop: >-
     {{
       (
-        (static_files.files | map(attribute='path') | list) +
-        (template_files.files | map(attribute='path') | list)
+        (docker_deploy_static_files.files | map(attribute='path') | list) +
+        (docker_deploy_template_files.files | map(attribute='path') | list)
       )
       | map('relpath', playbook_dir + '/docker/' + service)
       | map('dirname')
@@ -55,7 +55,7 @@
     src: "{{ item.path }}"
     dest: "/opt/{{ service }}/{{ item.path | relpath(playbook_dir + '/docker/' + service) }}"
     mode: "0644"
-  loop: "{{ static_files.files }}"
+  loop: "{{ docker_deploy_static_files.files }}"
   loop_control:
     label: "{{ item.path | basename }}"
 
@@ -64,7 +64,7 @@
     src: "{{ item.path }}"
     dest: "/opt/{{ service }}/{{ (item.path | relpath(playbook_dir + '/docker/' + service)) | regex_replace('\\.j2$', '') }}"
     mode: "0644"
-  loop: "{{ template_files.files }}"
+  loop: "{{ docker_deploy_template_files.files }}"
   loop_control:
     label: "{{ item.path | basename }}"
 

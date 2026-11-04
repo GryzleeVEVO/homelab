@@ -1,3 +1,4 @@
+---
 - name: Check if firewalld is running
   ansible.builtin.systemd:
     name: firewalld
@@ -19,7 +20,7 @@
         port: 51820/udp
         state: enabled
         permanent: true
-      register: open_wireguard
+      register: firewalld_open_wireguard
 
     - name: Enable masquerading traffic
       ansible.posix.firewalld:
@@ -27,7 +28,7 @@
         state: enabled
         masquerade: true
         permanent: true
-      register: enable_masquerade
+      register: firewalld_enable_masquerade
 
     - name: Add Wireguard interface to trusted zone
       ansible.posix.firewalld:
@@ -35,9 +36,9 @@
         zone: trusted
         state: enabled
         permanent: true
-      register: set_trusted_zone
+      register: firewalld_set_trusted_zone
 
     - name: Reload config
       ansible.builtin.command: firewall-cmd --reload
-      when: open_wireguard.changed or enable_masquerade.changed or set_trusted_zone.changed
+      when: firewalld_open_wireguard.changed or firewalld_enable_masquerade.changed or firewalld_set_trusted_zone.changed
       changed_when: true
