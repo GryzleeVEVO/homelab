@@ -1,0 +1,3 @@
+---
+# False by default, can get locked out of host if not using publickey already
+sshd_no_password: false

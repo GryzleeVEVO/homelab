@@ -74,11 +74,6 @@
         name: samba
       tags: samba
 
-    - name: Install Nginx
-      ansible.builtin.import_role:
-        name: nginx
-      tags: nginx
-
     - name: Install node_exporter
       ansible.builtin.import_role:
         name: opentelemetry

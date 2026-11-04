@@ -1,0 +1,9 @@
+---
+argument_specs:
+  main:
+    short_description: Set up SSH daemon.
+    options:
+      sshd_no_passwd:
+        description: Disable password authentication.
+        type: bool
+        required: false
