@@ -1,0 +1,12 @@
+---
+- name: Install Docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+
+- name: Install cleanup cron job
+  ansible.builtin.copy:
+    src: docker-prune.sh
+    dest: /etc/cron.weekly/docker-prune
+    owner: root
+    group: root
+    mode: "0755"

@@ -86,7 +86,6 @@
     - name: Install Docker
       ansible.builtin.import_role:
         name: docker
-      tags: docker
 
     - name: Install motd
       ansible.builtin.import_role:
