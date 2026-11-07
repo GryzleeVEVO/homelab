@@ -22,12 +22,12 @@
 {% if "navidrome" in homepage_services %}
     - Navidrome:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/navidrome.svg
-        href: {{ homepage_services.navidrome }}
+        href: {{ homepage_services.navidrome.url }}
         description: Stream music
         container: navidrome
         widget:
             type: navidrome
-            url: {{ homepage_services.navidrome }}
+            url: {{ homepage_services.navidrome.url }}
             user: {{ navidrome_username }}
             token: {{ navidrome_password }}
             salt: {{ navidrome_salt }}
@@ -150,9 +150,7 @@
         widget:
             type: qbittorrent
             url: {{ homepage_services.qbittorrent.url }}
-            username: {{ qbittorrent_username }}
-            password: {{ qbittorrent_password }}
-            # key: qbt_apikey # required if using API key instead of username/password
+            key: {{ qbittorrent_api_key }}
             enableLeechProgress: true # optional, defaults to false
             enableLeechSize: true # optional, defaults to false
 {% endif %}

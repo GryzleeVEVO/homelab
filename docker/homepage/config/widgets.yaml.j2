@@ -13,10 +13,12 @@
     cputemp: true
     disk:
       - /
-      - {{ media_directory }}
+{% if media_directory %}
+      - /mnt/mediaserver
+{% endif %}
 
 - openmeteo:
-    {{ homepage_openmeteo_data }}
+    {{ homepage_openmeteo_data | to_nice_yaml | trim | indent(4, false) }}
     units: metric
     cache: 5
     format:

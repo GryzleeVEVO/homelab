@@ -8,6 +8,8 @@ services:
     volumes:
       - ./config/:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
+{% if media_directory %}
       - {{ media_directory }}:/mnt/mediaserver:ro
+{% endif %}
     environment:
       HOMEPAGE_ALLOWED_HOSTS: {{ homepage_url }}
