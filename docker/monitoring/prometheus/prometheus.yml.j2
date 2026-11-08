@@ -50,3 +50,12 @@ scrape_configs:
         - {{ target }}
 {% endfor %}
 {% endif %}
+
+{% if "docker" in prometheus_targets %}
+  - job_name: docker
+    static_configs:
+      - targets:
+{% for target in prometheus_targets.docker %}
+        - {{ target }}
+{% endfor %}
+{% endif %}
