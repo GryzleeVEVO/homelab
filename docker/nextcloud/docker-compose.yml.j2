@@ -1,0 +1,37 @@
+services:
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD: {{ nextcloud_pg_password }}
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+    ports:
+      - 8200:80
+    volumes:
+      - nextcloud:/var/www/html
+    depends_on:
+      - redis
+      - db
+
+  db:
+    container_name: nextcloud-db
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: {{ nextcloud_pg_password }}
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+  redis:
+    container_name: nextcloud-redis
+    image: redis:alpine
+    restart: unless-stopped
+
+volumes:
+  nextcloud:
+  postgres-data:
