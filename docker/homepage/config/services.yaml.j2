@@ -37,8 +37,9 @@
     - Paperless-ngx:
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless-ngx.svg
         href: {{ homepage_services.paperless.url }}
+        ping: {{ homepage_services.paperless.url }}
         description: Document scanner and manager
-        container: paperless-ngx
+        statusStyle: basic
 {% endif %}
 
 {% if "immich" in homepage_services %}
@@ -46,7 +47,7 @@
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg
         href: {{ homepage_services.immich.url }}
         description: Image and video manager
-        container: immich_server
+        container: immich
 {% endif %}
 
 - Monitoring and observability:
