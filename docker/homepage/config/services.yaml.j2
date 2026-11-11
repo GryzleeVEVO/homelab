@@ -50,6 +50,14 @@
         container: immich
 {% endif %}
 
+{% if "nextcloud" in homepage_services %}
+    - Nextcloud:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg
+        href: {{ homepage_services.nextcloud.url }}
+        description: Cloud storage
+        container: nextcloud
+{% endif %}
+
 - Monitoring and observability:
 {% if "grafana" in homepage_services %}
     - Grafana:
@@ -156,8 +164,17 @@
             enableLeechSize: true # optional, defaults to false
 {% endif %}
 
-{% if "pihole" in homepage_services %}
 - Networking and infrastructure:
+{% if "forgejo" in homepage_services %}
+    - Forgejo:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/forgejo.svg
+        href: {{ homepage_services.forgejo.url }}
+        ping: {{ homepage_services.forgejo.url }}
+        description: Code forge
+        statusStyle: basic
+{% endif %}
+
+{% if "pihole" in homepage_services %}
     - Pi-hole:
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pi-hole.svg
         href: {{ homepage_services.pihole.url }}

@@ -1,7 +1,7 @@
 services:
   nextcloud:
     container_name: nextcloud
-    image: nextcloud
+    image: nextcloud:{{ version_tags.nextcloud }}
     restart: unless-stopped
     environment:
       POSTGRES_HOST: db
