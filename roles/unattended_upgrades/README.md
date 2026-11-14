@@ -25,5 +25,5 @@ No dependencies from other roles.
 - hosts: all
   become: true
   roles:
-    - wol
+    - unattended_upgrades
 ```
