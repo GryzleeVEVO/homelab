@@ -42,22 +42,29 @@
         dest: $HOME/.dotfiles
         version: main
 
-    - name: Remove conflicting files before stowing
-      ansible.builtin.file:
+    - name: Check for files that conflict with stow
+      ansible.builtin.stat:
         path: "{{ item }}"
-        state: absent
       loop:
         - $HOME/.bashrc
-        - $HOME/.bash_history
         - $HOME/.bash_logout
         - $HOME/.profile
+      register: home_setup_conflicts
+
+    - name: Remove conflicting files that are not stow symlinks
+      ansible.builtin.file:
+        path: "{{ item.item }}"
+        state: absent
+      loop: "{{ home_setup_conflicts.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: item.stat.exists and not item.stat.islnk
 
     - name: Install dotfiles with stow
       ansible.builtin.command:
         cmd: stow --dir=$HOME/.dotfiles --target=$HOME --verbose {{ item }}
       register: stow_output
-      changed_when: stow_output.rc == 0
-      failed_when: stow_output.rc != 0
+      changed_when: "'LINK:' in stow_output.stderr"
       loop:
         - core
         - bash
