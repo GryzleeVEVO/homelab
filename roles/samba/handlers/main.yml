@@ -8,8 +8,8 @@
 - name: Disable and stop nmbd
   ansible.builtin.service:
     name: nmbd
-    state: started
-    enabled: true
+    state: stopped
+    enabled: false
 
 - name: Reload smbd
   ansible.builtin.service:
