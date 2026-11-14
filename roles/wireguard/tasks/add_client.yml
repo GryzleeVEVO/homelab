@@ -42,6 +42,7 @@
           umask 0077
           wg genkey > /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
         creates: /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
+      no_log: true
 
     - name: Generate public key
       ansible.builtin.shell:
@@ -56,6 +57,7 @@
         cmd: cat /etc/wireguard/clients/{{ client.name }}/{{ client.name }}_private.key
       register: wireguard_client_private_key_out
       changed_when: false
+      no_log: true
 
     - name: Read public key
       ansible.builtin.command:

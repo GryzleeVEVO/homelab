@@ -29,6 +29,7 @@
           umask 0077
           wg genkey | tee /etc/wireguard/server_private.key
         creates: /etc/wireguard/server_private.key
+      no_log: true
 
     - name: Generate public key
       ansible.builtin.shell:
@@ -44,13 +45,14 @@
       register: wireguard_server_private_key_out
       changed_when: false
       failed_when: wireguard_server_private_key_out.rc != 0
+      no_log: true
 
     - name: Read public key
       ansible.builtin.command:
         cmd: cat /etc/wireguard/server_public.key
       register: wireguard_server_public_key_out
       changed_when: false
-      failed_when: wireguard_server_private_key_out.rc != 0
+      failed_when: wireguard_server_public_key_out.rc != 0
 
     - name: Store keys
       ansible.builtin.set_fact:
