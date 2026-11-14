@@ -36,7 +36,7 @@
       block:
         - name: Set hostname facts
           ansible.builtin.set_fact:
-            fqdn: "{{ hostname }}.{{ ansible_facts.fqdn.split('.', 1)[1] }}"
+            fqdn: "{{ hostname }}{{ ('.' ~ ansible_facts.domain) if ansible_facts.domain else '' }}"
 
         - name: Show new hostname
           ansible.builtin.debug:
