@@ -7,6 +7,7 @@
     group: root
     mode: "0644"
   loop: "{{ sshd_setup_files }}"
+  notify: Validate sshd config before restart
 
 - name: Warn if not using public key authentication
   ansible.builtin.debug:
@@ -21,6 +22,7 @@
     owner: root
     group: root
     mode: "0644"
+  notify: Validate sshd config before restart
 
 - name: Remove password authentication if requested
   when:
@@ -29,11 +31,4 @@
   ansible.builtin.file:
     path: /etc/ssh/sshd_config.d/91-password-auth.conf
     state: absent
-
-- name: Validate sshd config before restart
-  ansible.builtin.command: sshd -t
-  register: sshd_check
-  changed_when: sshd_check.rc == 0
-  failed_when: sshd_check.rc != 0
-  notify:
-    - Enable and restart sshd
+  notify: Validate sshd config before restart

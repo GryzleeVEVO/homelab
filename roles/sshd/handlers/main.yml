@@ -1,6 +1,14 @@
 ---
-- name: Enable and restart sshd
+- name: Validate sshd config before restart
+  ansible.builtin.command: sshd -t
+  register: sshd_check
+  changed_when: sshd_check.rc == 0
+  failed_when: sshd_check.rc != 0
+  notify:
+    - Enable and restart ssh
+
+- name: Enable and restart ssh
   ansible.builtin.service:
-    name: sshd
+    name: ssh
     state: restarted
     enabled: true

@@ -17,7 +17,7 @@ all:
       #
 
       # Disable password login
-      sshd_no_passwd: false
+      sshd_no_password: false
 
       #
       # --- Wake-on-LAN ---
