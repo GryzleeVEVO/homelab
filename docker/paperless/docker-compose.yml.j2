@@ -23,8 +23,8 @@ services:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
       PAPERLESS_DBENGINE: postgresql
-      PAPERLESS_DBPASS: {{ paperless_pg_password }}
-      PAPERLESS_SECRET_KEY: {{ paperless_secret_key }}
+      PAPERLESS_DBPASS: "{{ paperless_pg_password }}"
+      PAPERLESS_SECRET_KEY: "{{ paperless_secret_key }}"
       PAPERLESS_TIME_ZONE: Europe/Madrid
       PAPERLESS_OCR_LANGUAGE: spa
       USERMAP_UID: 1000
@@ -49,7 +49,7 @@ services:
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: {{ paperless_pg_password }}
+      POSTGRES_PASSWORD: "{{ paperless_pg_password }}"
 
 volumes:
   data:

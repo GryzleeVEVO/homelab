@@ -9,7 +9,7 @@
         widget:
             type: jellyfin
             url: {{ homepage_services.jellyfin.url }}
-            key: {{ jellyfin_api_key }}
+            key: "{{ jellyfin_api_key }}"
             version: 2
             enableBlocks: true
             enableNowPlaying: true
@@ -29,8 +29,8 @@
             type: navidrome
             url: {{ homepage_services.navidrome.url }}
             user: {{ navidrome_username }}
-            token: {{ navidrome_password }}
-            salt: {{ navidrome_salt }}
+            token: "{{ navidrome_password }}"
+            salt: "{{ navidrome_salt }}"
 {% endif %}
 
 {% if "paperless" in homepage_services %}
@@ -71,7 +71,7 @@
             alerts: grafana
             url: {{ homepage_services.grafana.url }}
             username: {{ grafana_username }}
-            password: {{ grafana_password }}
+            password: "{{ grafana_password }}"
 {% endif %}
 
 {% if "prometheus" in homepage_services %}
@@ -109,7 +109,7 @@
         widget:
             type: radarr
             url: {{ homepage_services.radarr.url }}
-            key: {{ radarr_api_key }}
+            key: "{{ radarr_api_key }}"
             enableQueue: true
 {% endif %}
 
@@ -122,7 +122,7 @@
         widget:
             type: sonarr
             url: {{ homepage_services.sonarr.url }}
-            key: {{ sonarr_api_key }}
+            key: "{{ sonarr_api_key }}"
             enableQueue: true
 {% endif %}
 
@@ -135,7 +135,7 @@
         widget:
             type: lidarr
             url: {{ homepage_services.lidarr.url }}
-            key: {{ lidarr_api_key }}
+            key: "{{ lidarr_api_key }}"
 {% endif %}
 
 {% if "prowlarr" in homepage_services %}
@@ -147,7 +147,7 @@
         widget:
             type: prowlarr
             url: {{ homepage_services.prowlarr.url }}
-            key: {{ prowlarr_api_key }}
+            key: "{{ prowlarr_api_key }}"
 {% endif %}
 
 {% if "qbittorrent" in homepage_services %}
@@ -159,7 +159,7 @@
         widget:
             type: qbittorrent
             url: {{ homepage_services.qbittorrent.url }}
-            key: {{ qbittorrent_api_key }}
+            key: "{{ qbittorrent_api_key }}"
             enableLeechProgress: true # optional, defaults to false
             enableLeechSize: true # optional, defaults to false
 {% endif %}

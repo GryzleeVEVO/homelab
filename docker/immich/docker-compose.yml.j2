@@ -8,7 +8,7 @@ services:
       - {{ photos_directory }}:/mnt/media/photos:ro
     environment:
       TZ: Europe/Madrid
-      DB_PASSWORD: {{ immich_pg_password }}
+      DB_PASSWORD: "{{ immich_pg_password }}"
     ports:
       - 2283:2283
     depends_on:
@@ -42,7 +42,7 @@ services:
     container_name: immich-db
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     environment:
-      POSTGRES_PASSWORD: {{ immich_pg_password }}
+      POSTGRES_PASSWORD: "{{ immich_pg_password }}"
       POSTGRES_USER: postgres
       POSTGRES_DB: immich
       POSTGRES_INITDB_ARGS: --data-checksums

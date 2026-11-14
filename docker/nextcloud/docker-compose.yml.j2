@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_HOST: db
-      POSTGRES_PASSWORD: {{ nextcloud_pg_password }}
+      POSTGRES_PASSWORD: "{{ nextcloud_pg_password }}"
       POSTGRES_DB: nextcloud
       POSTGRES_USER: nextcloud
     ports:
@@ -21,7 +21,7 @@ services:
     image: postgres:18
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: {{ nextcloud_pg_password }}
+      POSTGRES_PASSWORD: "{{ nextcloud_pg_password }}"
       POSTGRES_DB: nextcloud
       POSTGRES_USER: nextcloud
     volumes:
