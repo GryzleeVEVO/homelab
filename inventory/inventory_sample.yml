@@ -27,7 +27,7 @@ all:
       wol_interface: eth0
 
       #
-      # --- Wireshark ---
+      # --- WireGuard ---
       #
 
       wireguard_server_ip: 10.0.0.1/24
@@ -62,7 +62,6 @@ all:
           - 192.168.1.1:3100
         node_exporter:
           - 192.168.1.1:9100
-
 
       # Loki endpoint
       alloy_loki_endpoint: http://192.168.1.66:3100/loki/api/v1/push
