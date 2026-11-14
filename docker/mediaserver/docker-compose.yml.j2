@@ -115,6 +115,8 @@ services:
     image: flaresolverr/flaresolverr:{{ version_tags.flaresolverr }}
     container_name: flaresolverr
     restart: unless-stopped
+    tmpfs:
+      - /tmp:size=256M,mode=1777
     healthcheck:
       test: curl -f http://localhost:8191/health
       <<: *healthcheck
@@ -124,8 +126,9 @@ services:
     container_name: qbittorrent
     restart: unless-stopped
     ports:
-      - 6880:6880   # Web
-      - 6881:6881   # Bittorrent
+      - 6880:6880       # Web
+      - 6881:6881/tcp   # Bittorrent
+      - 6881:6881/udp
     environment:
       - QBT_LEGAL_NOTICE=confirm
       - QBT_WEBUI_PORT=6880
