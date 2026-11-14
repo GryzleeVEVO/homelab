@@ -6,56 +6,11 @@ runtime:
   log_level: warn
 
 scrape_configs:
-{% if "prometheus" in prometheus_targets %}
-  - job_name: prometheus
+{% for job, targets in prometheus_targets.items() %}
+  - job_name: {{ job }}
     static_configs:
       - targets:
-{% for target in prometheus_targets.prometheus %}
+{% for target in targets %}
         - {{ target }}
 {% endfor %}
-{% endif %}
-
-{% if "loki" in prometheus_targets %}
-  - job_name: loki
-    static_configs:
-      - targets:
-{% for target in prometheus_targets.loki %}
-        - {{ target }}
 {% endfor %}
-{% endif %}
-
-{% if "node_exporter" in prometheus_targets %}
-  - job_name: node_exporter
-    static_configs:
-      - targets:
-{% for target in prometheus_targets.node_exporter %}
-        - {{ target }}
-{% endfor %}
-{% endif %}
-
-{% if "alloy" in prometheus_targets %}
-  - job_name: alloy
-    static_configs:
-      - targets:
-{% for target in prometheus_targets.alloy %}
-        - {{ target }}
-{% endfor %}
-{% endif %}
-
-{% if "grafana" in prometheus_targets %}
-  - job_name: grafana
-    static_configs:
-      - targets:
-{% for target in prometheus_targets.grafana %}
-        - {{ target }}
-{% endfor %}
-{% endif %}
-
-{% if "docker" in prometheus_targets %}
-  - job_name: docker
-    static_configs:
-      - targets:
-{% for target in prometheus_targets.docker %}
-        - {{ target }}
-{% endfor %}
-{% endif %}
